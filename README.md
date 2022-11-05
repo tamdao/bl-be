@@ -32,6 +32,9 @@
 $ npm install
 ```
 
+## Setup ENV
+Rename `.env.example` to `.env` and set value for `JWT_SECRET` and `DB_URL`
+
 ## Running the app
 
 ```bash
