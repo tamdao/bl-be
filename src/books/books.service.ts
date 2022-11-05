@@ -23,7 +23,10 @@ export class BooksService {
   }
 
   findAll(where: FindOptionsWhere<Book>, pagination: IPagination) {
-    return paginate(this.bookRepository, pagination, where);
+    return paginate(this.bookRepository, pagination, {
+      where,
+      relations: ['author'],
+    });
   }
 
   async findOne(id: string) {
