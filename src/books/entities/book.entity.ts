@@ -1,34 +1,38 @@
-import { Book } from 'src/books/entities/book.entity';
+import { User } from 'src/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
-  Index,
   JoinColumn,
-  OneToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
-export class User {
+export class Book {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ length: 20 })
-  @Index({ unique: true })
-  username: string;
+  @Column()
+  name: string;
 
   @Column()
-  password: string;
+  thumbnailUrl: string;
+
+  @Column()
+  genre: string;
+
+  @Column()
+  authorId: string;
+
+  @ManyToOne(() => User)
+  @JoinColumn()
+  author: User;
 
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
-
-  @OneToMany(() => Book, (book) => book.author)
-  @JoinColumn()
-  books: Book[];
 }
