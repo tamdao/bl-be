@@ -13,6 +13,8 @@ import {
   DefaultValuePipe,
   ParseIntPipe,
   UnauthorizedException,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ILike } from 'typeorm';
@@ -20,6 +22,7 @@ import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('books')
 export class BooksController {
   constructor(private readonly booksService: BooksService) {}

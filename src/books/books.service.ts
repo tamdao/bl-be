@@ -26,8 +26,13 @@ export class BooksService {
     return paginate(this.bookRepository, pagination, where);
   }
 
-  findOne(id: string) {
-    return this.bookRepository.findOneBy({ id });
+  async findOne(id: string) {
+    return this.bookRepository.findOne({
+      where: {
+        id,
+      },
+      relations: ['author'],
+    });
   }
 
   update(id: string, updateBookDto: UpdateBookDto) {
