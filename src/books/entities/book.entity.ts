@@ -17,6 +17,11 @@ export class Book {
   @Column()
   name: string;
 
+  @Column({
+    type: 'text',
+  })
+  description: string;
+
   @Column()
   thumbnailUrl: string;
 

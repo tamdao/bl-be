@@ -26,8 +26,8 @@ export class BooksService {
     return paginate(this.bookRepository, pagination, where);
   }
 
-  findOne(where: FindOptionsWhere<Book>) {
-    return this.bookRepository.findOneBy(where);
+  findOne(id: string) {
+    return this.bookRepository.findOneBy({ id });
   }
 
   update(id: string, updateBookDto: UpdateBookDto) {

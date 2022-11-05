@@ -12,6 +12,7 @@ import {
   Query,
   DefaultValuePipe,
   ParseIntPipe,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ILike } from 'typeorm';
@@ -41,7 +42,6 @@ export class BooksController {
     return this.booksService.findAll(
       {
         name: query ? ILike(`%${query}%`) : undefined,
-        authorId: req.user.id,
       },
       {
         limit,
@@ -53,10 +53,7 @@ export class BooksController {
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Request() req, @Param('id') id: string) {
-    const book = await this.booksService.findOne({
-      id,
-      authorId: req.user.id,
-    });
+    const book = await this.booksService.findOne(id);
     if (!book) {
       throw new NotFoundException('Book not found');
     }
@@ -70,12 +67,12 @@ export class BooksController {
     @Param('id') id: string,
     @Body() updateBookDto: UpdateBookDto,
   ) {
-    const book = await this.booksService.findOne({
-      id,
-      authorId: req.user.id,
-    });
+    const book = await this.booksService.findOne(id);
     if (!book) {
       throw new NotFoundException('Book not found');
+    }
+    if (book.authorId !== req.user.id) {
+      throw new UnauthorizedException(`You don't have permission`);
     }
     return this.booksService.update(id, updateBookDto);
   }
@@ -83,12 +80,12 @@ export class BooksController {
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Request() req, @Param('id') id: string) {
-    const book = await this.booksService.findOne({
-      id,
-      authorId: req.user.id,
-    });
+    const book = await this.booksService.findOne(id);
     if (!book) {
       throw new NotFoundException('Book not found');
+    }
+    if (book.authorId !== req.user.id) {
+      throw new UnauthorizedException(`You don't have permission`);
     }
     return this.booksService.remove(id);
   }
