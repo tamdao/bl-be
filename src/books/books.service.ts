@@ -1,26 +1,41 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
+import { paginate } from 'nestjs-typeorm-paginate';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
+import { Book } from './entities/book.entity';
 
+interface IPagination {
+  page: number;
+  limit: number;
+}
 @Injectable()
 export class BooksService {
+  constructor(
+    @InjectRepository(Book)
+    private bookRepository: Repository<Book>,
+  ) {}
+
   create(createBookDto: CreateBookDto) {
-    return 'This action adds a new book';
+    const book = this.bookRepository.create(createBookDto);
+    return this.bookRepository.save(book);
   }
 
-  findAll() {
-    return `This action returns all books`;
+  findAll(where: FindOptionsWhere<Book>, pagination: IPagination) {
+    return paginate(this.bookRepository, pagination, where);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} book`;
+  findOne(where: FindOptionsWhere<Book>) {
+    return this.bookRepository.findOneBy(where);
   }
 
-  update(id: number, updateBookDto: UpdateBookDto) {
-    return `This action updates a #${id} book`;
+  update(id: string, updateBookDto: UpdateBookDto) {
+    const updateInfo = this.bookRepository.create(updateBookDto);
+    return this.bookRepository.update(id, updateInfo);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} book`;
+  remove(id: string) {
+    return this.bookRepository.delete(id);
   }
 }
