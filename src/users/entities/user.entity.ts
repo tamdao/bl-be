@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { Book } from 'src/books/entities/book.entity';
 import {
   Column,
@@ -15,11 +16,15 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column()
+  fullName: string;
+
   @Column({ length: 20 })
   @Index({ unique: true })
   username: string;
 
   @Column()
+  @Exclude()
   password: string;
 
   @CreateDateColumn()
@@ -28,7 +33,7 @@ export class User {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToMany(() => Book, (book) => book.author)
+  @OneToMany(() => Book, (book: Book) => book.author)
   @JoinColumn()
   books: Book[];
 }

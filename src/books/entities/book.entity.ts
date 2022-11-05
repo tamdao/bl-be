@@ -1,4 +1,5 @@
 import { User } from 'src/users/entities/user.entity';
+import { Transform } from 'class-transformer';
 import {
   Column,
   CreateDateColumn,
@@ -33,6 +34,7 @@ export class Book {
 
   @ManyToOne(() => User)
   @JoinColumn()
+  @Transform(({ value }) => value.fullName)
   author: User;
 
   @CreateDateColumn()
