@@ -1,7 +1,10 @@
+import { User } from 'src/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -15,10 +18,14 @@ export class Book {
   name: string;
 
   @Column()
-  genre: string;
+  thumbnailUrl: string;
 
   @Column()
-  author: string;
+  genre: string;
+
+  @ManyToOne(() => User)
+  @JoinColumn()
+  author: User;
 
   @CreateDateColumn()
   createdAt: Date;
